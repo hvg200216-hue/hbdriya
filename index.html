@@ -76,11 +76,6 @@ button:hover {
   from { transform: translateY(100vh); }
   to { transform: translateY(-10vh); }
 }
-
-.countdown {
-  font-size: 32px;
-  margin-top: 25px;
-}
 </style>
 </head>
 
@@ -100,7 +95,7 @@ for (let i = 0; i < 35; i++) {
 </script>
 
 <!-- MUSIC -->
-<audio id="music" loop></audio>
+<audio id="music" preload="auto" muted></audio>
 
 <!-- PAGE 1 -->
 <section id="page1" class="active">
@@ -116,11 +111,8 @@ for (let i = 0; i < 35; i++) {
   <div>
     <p>
       🌷🌷🌷🌷🌷🌷🌷🌷🌷🌷🌷🌷🌷🌷🌷🌷🌷🌷🌷🌷<br/>
-      I’ve been learning to let go of what no longer serves me,<br/>
-      and to keep what feels gentle and true... <br/>
+      I’ve been keeping what feels lovely, gentle and true to me... <br/>
       🌷🌷🌷🌷🌷🌷🌷🌷🌷🌷🌷🌷🌷🌷🌷🌷🌷🌷🌷🌷
-      
-
     </p>
     <button onclick="nextPage(3)">Continue 🌙</button>
   </div>
@@ -130,7 +122,7 @@ for (let i = 0; i < 35; i++) {
 <section id="page3">
   <div>
     <p>
-      Ordinary days — work, rest, music, talk on calls-<br/>
+      Ordinary days- work, rest, music, talk on calls-<br/>
       somehow still feel meaningful when the heart is calm...🌸
     </p>
     <button onclick="nextPage(4)">Continue 🌷</button>
@@ -148,29 +140,19 @@ for (let i = 0; i < 35; i++) {
   </div>
 </section>
 
-<!-- PAGE 5 COUNTDOWN -->
+<!-- PAGE 5 -->
 <section id="page5">
   <div>
-    <h2>Waiting for midnight 🌙</h2>
-    <div class="countdown" id="countdown"></div>
-    <p style="margin-top:20px;">Just a little longer 🤍</p>
+    <h1>It’s your day!!! 🎂🤍</h1>
+    <p style="margin-top:25px;">
+      Funny how we share the same brown eyes 🌸
+    </p>
+    <button onclick="nextPage(6)">Continue ✨</button>
   </div>
 </section>
 
 <!-- PAGE 6 -->
 <section id="page6">
-  <div>
-    <h1>It’s your day!!!🎂🤍</h1>
-    <p style="margin-top:25px;">
-      Funny how the same brown eyes<br/>
-      can see the world with the same softness.🌸
-    </p>
-    <button onclick="nextPage(7)">Continue ✨</button>
-  </div>
-</section>
-
-<!-- PAGE 7 -->
-<section id="page7">
   <div>
     <p>
       I hope life is kind to you...⭐<br/>
@@ -179,15 +161,15 @@ for (let i = 0; i < 35; i++) {
     </p>
     <p style="margin-top:30px; font-size:16px;">
       Some connections are remembered warmly...🤍<br/>
-      And that is enough✨
+      And that is enough ✨
     </p>
   </div>
 </section>
 
 <script>
 const playlist = [
-  "aaoge-jab-tum.mp3",
-  "the-pool-stephen-sanchez.mp3",
+  "mae-agar-kahoon.mp3",
+  "the-pool.mp3",
   "agar-tum-saath-ho.mp3"
 ];
 
@@ -196,6 +178,7 @@ const music = document.getElementById("music");
 
 function startExperience() {
   music.src = playlist[track];
+  music.muted = false;
   music.play().catch(()=>{});
   nextPage(2);
 }
@@ -211,26 +194,13 @@ function nextPage(n) {
   document.getElementById("page" + n).classList.add("active");
 }
 
-// Countdown
-const target = new Date();
-target.setHours(24,0,0,0);
-const countdownEl = document.getElementById("countdown");
-
-setInterval(() => {
-  const now = new Date();
-  const diff = target - now;
-
-  if (diff <= 0) {
-    nextPage(6);
-    return;
+/* extra safety for mobile */
+document.body.addEventListener("click", () => {
+  if (music.paused) {
+    music.muted = false;
+    music.play().catch(()=>{});
   }
-
-  const h = Math.floor(diff / (1000*60*60));
-  const m = Math.floor((diff / (1000*60)) % 60);
-  const s = Math.floor((diff / 1000) % 60);
-
-  countdownEl.innerHTML = `${h}h ${m}m ${s}s`;
-}, 1000);
+}, { once: true });
 </script>
 
 </body>
