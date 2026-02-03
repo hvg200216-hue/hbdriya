@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Happy Birthday Mitsuki 🌙</title>
+
+<style>
+* {
+  box-sizing: border-box;
+  font-family: 'Georgia', serif;
+}
+
+body {
+  margin: 0;
+  background: #f2f2f2;
+  color: #4b3621;
+  overflow-x: hidden;
+}
+
+section {
+  min-height: 100vh;
+  padding: 60px 20px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  animation: fadeIn 1.3s ease;
+}
+
+section.active {
+  display: flex;
+}
+
+h1, h2 {
+  font-weight: 400;
+  margin-bottom: 20px;
+}
+
+p {
+  max-width: 650px;
+  line-height: 1.9;
+  font-size: 18px;
+  margin: auto;
+}
+
+button {
+  margin-top: 35px;
+  padding: 12px 32px;
+  border: none;
+  background: #8b6b4f;
+  color: #fff;
+  font-size: 16px;
+  border-radius: 30px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #6b4b32;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(25px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* floating emojis */
+.float {
+  position: absolute;
+  font-size: 22px;
+  opacity: 0.6;
+  animation: floatUp linear infinite;
+}
+
+@keyframes floatUp {
+  from { transform: translateY(100vh); }
+  to { transform: translateY(-10vh); }
+}
+
+.countdown {
+  font-size: 32px;
+  margin-top: 25px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- Floating Emojis -->
+<script>
+const emojis = ["⭐","🌙","🌷","🌸","✨","🤍"];
+for (let i = 0; i < 35; i++) {
+  const e = document.createElement("div");
+  e.className = "float";
+  e.innerText = emojis[Math.floor(Math.random()*emojis.length)];
+  e.style.left = Math.random()*100 + "vw";
+  e.style.animationDuration = (8 + Math.random()*6) + "s";
+  document.body.appendChild(e);
+}
+</script>
+
+<!-- MUSIC -->
+<audio id="music" loop></audio>
+
+<!-- PAGE 1 -->
+<section id="page1" class="active">
+  <div>
+    <h1>Some moments are meant to be felt quietly 🌙</h1>
+    <p>Not everything needs words...Some things just stay...🤍</p>
+    <button onclick="startExperience()">Continue ✨</button>
+  </div>
+</section>
+
+<!-- PAGE 2 -->
+<section id="page2">
+  <div>
+    <p>
+      🌷🌷🌷🌷🌷🌷🌷🌷🌷🌷🌷🌷🌷🌷🌷🌷🌷🌷🌷🌷<br/>
+      I’ve been learning to let go of what no longer serves me,<br/>
+      and to keep what feels gentle and true... <br/>
+      🌷🌷🌷🌷🌷🌷🌷🌷🌷🌷🌷🌷🌷🌷🌷🌷🌷🌷🌷🌷
+      
+
+    </p>
+    <button onclick="nextPage(3)">Continue 🌙</button>
+  </div>
+</section>
+
+<!-- PAGE 3 -->
+<section id="page3">
+  <div>
+    <p>
+      Ordinary days — work, rest, music, talk on calls-<br/>
+      somehow still feel meaningful when the heart is calm...🌸
+    </p>
+    <button onclick="nextPage(4)">Continue 🌷</button>
+  </div>
+</section>
+
+<!-- PAGE 4 -->
+<section id="page4">
+  <div>
+    <p>
+      Some people make you feel understood without trying...<br/>
+      That kindness stays longer than words...🤍
+    </p>
+    <button onclick="nextPage(5)">Continue ⭐</button>
+  </div>
+</section>
+
+<!-- PAGE 5 COUNTDOWN -->
+<section id="page5">
+  <div>
+    <h2>Waiting for midnight 🌙</h2>
+    <div class="countdown" id="countdown"></div>
+    <p style="margin-top:20px;">Just a little longer 🤍</p>
+  </div>
+</section>
+
+<!-- PAGE 6 -->
+<section id="page6">
+  <div>
+    <h1>It’s your day!!!🎂🤍</h1>
+    <p style="margin-top:25px;">
+      Funny how the same brown eyes<br/>
+      can see the world with the same softness.🌸
+    </p>
+    <button onclick="nextPage(7)">Continue ✨</button>
+  </div>
+</section>
+
+<!-- PAGE 7 -->
+<section id="page7">
+  <div>
+    <p>
+      I hope life is kind to you...⭐<br/>
+      That you feel valued, understood, and safe...🌙<br/>
+      Today and always...🌷
+    </p>
+    <p style="margin-top:30px; font-size:16px;">
+      Some connections are remembered warmly...🤍<br/>
+      And that is enough✨
+    </p>
+  </div>
+</section>
+
+<script>
+const playlist = [
+  "aaoge-jab-tum.mp3",
+  "the-pool-stephen-sanchez.mp3",
+  "agar-tum-saath-ho.mp3"
+];
+
+let track = 0;
+const music = document.getElementById("music");
+
+function startExperience() {
+  music.src = playlist[track];
+  music.play().catch(()=>{});
+  nextPage(2);
+}
+
+music.onended = () => {
+  track = (track + 1) % playlist.length;
+  music.src = playlist[track];
+  music.play();
+};
+
+function nextPage(n) {
+  document.querySelectorAll("section").forEach(s => s.classList.remove("active"));
+  document.getElementById("page" + n).classList.add("active");
+}
+
+// Countdown
+const target = new Date();
+target.setHours(24,0,0,0);
+const countdownEl = document.getElementById("countdown");
+
+setInterval(() => {
+  const now = new Date();
+  const diff = target - now;
+
+  if (diff <= 0) {
+    nextPage(6);
+    return;
+  }
+
+  const h = Math.floor(diff / (1000*60*60));
+  const m = Math.floor((diff / (1000*60)) % 60);
+  const s = Math.floor((diff / 1000) % 60);
+
+  countdownEl.innerHTML = `${h}h ${m}m ${s}s`;
+}, 1000);
+</script>
+
+</body>
+</html>
