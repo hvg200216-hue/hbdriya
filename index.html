@@ -77,20 +77,39 @@ button:hover {
   to { transform: translateY(-10vh); }
 }
 
-/* next song button */
-#nextSongBtn {
-  display: none;
+/* music player */
+#player {
   position: fixed;
   bottom: 20px;
-  right: 20px;
-  background: #8b6b4f;
-  color: white;
-  border: none;
-  padding: 10px 18px;
-  border-radius: 25px;
+  left: 20px;
+  background: rgba(255,255,255,0.9);
+  padding: 12px 16px;
+  border-radius: 30px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
   font-size: 14px;
+}
+
+#player button {
+  margin: 0;
+  padding: 6px 10px;
+  border-radius: 50%;
+  font-size: 14px;
+}
+
+#progress {
+  width: 120px;
+  accent-color: #8b6b4f;
   cursor: pointer;
-  opacity: 0.85;
+}
+
+#currentTime,
+#duration {
+  font-size: 12px;
+  width: 35px;
+  text-align: center;
 }
 </style>
 </head>
@@ -112,6 +131,16 @@ for (let i = 0; i < 35; i++) {
 
 <!-- MUSIC -->
 <audio id="music" preload="auto"></audio>
+
+<!-- MUSIC PLAYER -->
+<div id="player">
+  <button onclick="prevSong()">⏮</button>
+  <button onclick="togglePlay()" id="playBtn">▶</button>
+  <button onclick="nextSong()">⏭</button>
+  <span id="currentTime">0:00</span>
+  <input type="range" id="progress" value="0" />
+  <span id="duration">0:00</span>
+</div>
 
 <!-- PAGE 1 -->
 <section id="page1" class="active">
@@ -182,11 +211,9 @@ for (let i = 0; i < 35; i++) {
   </div>
 </section>
 
-<!-- NEXT SONG BUTTON -->
-<button id="nextSongBtn" onclick="nextSong()">🌙 Next Song</button>
-
 <script>
 const playlist = [
+  "die-with-a-smile.mp3",
   "main-agar-kahoon.mp3",
   "the-pool.mp3",
   "agar-tum-saath-ho.mp3"
@@ -194,22 +221,65 @@ const playlist = [
 
 let track = 0;
 const music = document.getElementById("music");
+const progress = document.getElementById("progress");
+const currentTimeEl = document.getElementById("currentTime");
+const durationEl = document.getElementById("duration");
+const playBtn = document.getElementById("playBtn");
 
 function startExperience() {
-  music.src = playlist[track];
+  loadSong(track);
   music.volume = 0.6;
   music.play().catch(()=>{});
-  document.getElementById("nextSongBtn").style.display = "block";
+  playBtn.textContent = "⏸";
   nextPage(2);
+}
+
+function loadSong(i) {
+  music.src = playlist[i];
+}
+
+function togglePlay() {
+  if (music.paused) {
+    music.play();
+    playBtn.textContent = "⏸";
+  } else {
+    music.pause();
+    playBtn.textContent = "▶";
+  }
 }
 
 function nextSong() {
   track = (track + 1) % playlist.length;
-  music.src = playlist[track];
-  music.play().catch(()=>{});
+  loadSong(track);
+  music.play();
+  playBtn.textContent = "⏸";
 }
 
+function prevSong() {
+  track = (track - 1 + playlist.length) % playlist.length;
+  loadSong(track);
+  music.play();
+  playBtn.textContent = "⏸";
+}
+
+music.addEventListener("timeupdate", () => {
+  progress.value = (music.currentTime / music.duration) * 100 || 0;
+  currentTimeEl.textContent = formatTime(music.currentTime);
+  durationEl.textContent = formatTime(music.duration);
+});
+
+progress.addEventListener("input", () => {
+  music.currentTime = (progress.value / 100) * music.duration;
+});
+
 music.addEventListener("ended", nextSong);
+
+function formatTime(time) {
+  if (!time) return "0:00";
+  const m = Math.floor(time / 60);
+  const s = Math.floor(time % 60).toString().padStart(2, "0");
+  return `${m}:${s}`;
+}
 
 function nextPage(n) {
   document.querySelectorAll("section").forEach(s => s.classList.remove("active"));
